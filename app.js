@@ -60,5 +60,5 @@ server.use((error, request, response, next) => {
 });
 
 // DB_URL="mongodb://localhost:27017/furnitureStoreDB"
-// DB_URL="mongodb://0.0.0.0:27017/furnitureStoreDB"
+// DB_URL="mongodb://0.0.0.0:27017/furnitureStoreDB'
 // port 8080 || 8081
