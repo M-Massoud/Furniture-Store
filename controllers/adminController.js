@@ -1,28 +1,31 @@
-const mongoose = require("mongoose");
-require("../models/adminModel");
-const { body } = require("express-validator");
+const mongoose = require('mongoose');
+require('../models/adminModel');
+const { body } = require('express-validator');
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(+process.env.saltRounds);
+// console.log(typeof process.env.saltRounds);
 
-let Admin = mongoose.model("admin");
+let Admin = mongoose.model('admin');
 
 module.exports.getAllAdmins = (request, response) => {
-  console.log(request.query);
-  console.log(request.params);
+  // console.log(request.query);
+  // console.log(request.params);
   Admin.find({})
-    .then((data) => {
+    .then(data => {
       response.status(200).json(data);
     })
-    .catch((error) => {
+    .catch(error => {
       next(error);
     });
 };
 
 module.exports.getAdminById = (request, response, next) => {
   Admin.findOne({ _id: request.params.id })
-    .then((data) => {
-      if (data == null) next(new Error(" Admin not found"));
+    .then(data => {
+      if (data == null) next(new Error(' Admin not found'));
       response.status(200).json(data);
     })
-    .catch((error) => {
+    .catch(error => {
       next(error);
     });
 };
@@ -32,15 +35,15 @@ module.exports.createAdmin = (request, response, next) => {
     _id: request.body.id,
     firstName: request.body.firstName,
     lastName: request.body.lastName,
-    password: request.body.password,
+    password: bcrypt.hashSync(request.body.password, salt),
     email: request.body.email,
   });
   object
     .save()
-    .then((data) => {
-      response.status(201).json({ data: "added" });
+    .then(data => {
+      response.status(201).json({ data: 'added' });
     })
-    .catch((error) => next(error));
+    .catch(error => next(error));
 };
 
 module.exports.updateAdmin = async (request, response, next) => {
@@ -48,7 +51,7 @@ module.exports.updateAdmin = async (request, response, next) => {
     const data = await Admin.findOne({ _id: request.body.id });
 
     for (const key in request.body) {
-      if (typeof request.body[key] == "object") {
+      if (typeof request.body[key] == 'object') {
         for (let item in request.body[key]) {
           data[key][item] = request.body[key][item];
         }
@@ -57,7 +60,7 @@ module.exports.updateAdmin = async (request, response, next) => {
 
     await data.save();
 
-    response.status(200).json({ data: "updated" });
+    response.status(200).json({ data: 'updated' });
   } catch (error) {
     next(error);
   }
@@ -65,8 +68,8 @@ module.exports.updateAdmin = async (request, response, next) => {
 
 module.exports.deleteAdmin = (request, response) => {
   Admin.deleteOne({ _id: request.params.id }, {})
-    .then((data) => {
+    .then(data => {
       response.status(200).json(data);
     })
-    .catch((error) => next(error));
+    .catch(error => next(error));
 };

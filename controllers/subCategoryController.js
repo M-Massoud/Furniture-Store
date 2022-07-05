@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
-require('../models/categoryModel');
+require('../models/subCategoryModel');
 const { body } = require('express-validator');
 
-let Category = mongoose.model('categories');
+let subCategory = mongoose.model('subCategory');
 
-module.exports.getAllCategories = (request, response) => {
+module.exports.getAllsubCategories = (request, response) => {
   console.log(request.query);
   console.log(request.params);
-  Category.find({})
+  subCategory
+    .find({})
+    .populate({ path: 'products', select: 'name price' })
     .then(data => {
       response.status(200).json(data);
     })
@@ -16,10 +18,11 @@ module.exports.getAllCategories = (request, response) => {
     });
 };
 
-module.exports.getCategoryById = (request, response, next) => {
-  Category.findOne({ _id: request.params.id })
+module.exports.getsubCategoryById = (request, response, next) => {
+  subCategory
+    .findOne({ _id: request.params.id })
     .then(data => {
-      if (data == null) next(new Error(' Category not found'));
+      if (data == null) next(new Error(' subCategory not found'));
       response.status(200).json(data);
     })
     .catch(error => {
@@ -27,9 +30,10 @@ module.exports.getCategoryById = (request, response, next) => {
     });
 };
 
-module.exports.createCategory = (request, response, next) => {
-  let object = new Category({
+module.exports.createsubCategory = (request, response, next) => {
+  let object = new subCategory({
     title: request.body.title,
+    products: request.body.products,
   });
   object
     .save()
@@ -39,9 +43,9 @@ module.exports.createCategory = (request, response, next) => {
     .catch(error => next(error));
 };
 
-module.exports.updateCategory = async (request, response, next) => {
+module.exports.updatesubCategory = async (request, response, next) => {
   try {
-    const data = await Category.findOne({ _id: request.body.id });
+    const data = await subCategory.findOne({ _id: request.body.id });
 
     for (const key in request.body) {
       if (typeof request.body[key] == 'object') {
@@ -59,8 +63,9 @@ module.exports.updateCategory = async (request, response, next) => {
   }
 };
 
-module.exports.deleteCategory = (request, response, next) => {
-  Category.deleteOne({ _id: request.params.id }, {})
+module.exports.deletesubCategory = (request, response, next) => {
+  subCategory
+    .deleteOne({ _id: request.params.id }, {})
     .then(data => {
       response.status(200).json(data);
     })

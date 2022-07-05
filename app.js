@@ -6,14 +6,15 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const usersRoute = require('./routes/usersRoute');
 const productsRoute = require('./routes/productsRoute');
-const ordersRouter = require('./routes/ordersRout');
-const adminRoute = require('./routes/adminRouter');
-const categoryRoute = require('./routes/categoryRouter');
-const supCategoryRoute = require('./routes/supCategoryRouter');
+const ordersRoute = require('./routes/ordersRoute');
+const adminRoute = require('./routes/adminRoute');
+const categoryRoute = require('./routes/categoryRoute');
+const subCategoryRoute = require('./routes/subCategoryRoute');
+const loginRoute = require('./routes/loginRoute');
 
 const server = express();
-const port = 8080;
-//const port = 8081;
+// const port = 8080;
+const port = 8081;
 
 // connect to database and express server
 
@@ -43,10 +44,11 @@ server.get('/home', (request, response) => {
 
 server.use(usersRoute);
 server.use(productsRoute);
-server.use(ordersRouter);
+server.use(ordersRoute);
 server.use(adminRoute);
 server.use(categoryRoute);
-server.use(supCategoryRoute);
+server.use(subCategoryRoute);
+server.use(loginRoute);
 
 // c- General middleware for not Found url pathes with 404 status code.
 server.use((request, response) => {

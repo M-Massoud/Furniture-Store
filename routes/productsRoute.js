@@ -3,14 +3,24 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const controller = require('./../controllers/productsController');
 const validationMW = require('../middlewares/validationMW');
+const authMW = require('./../middlewares/authMW');
+const authFunction = (request, response, next) => {
+  if (request.role == 'admin') next();
+  else {
+    let error = new Error("Not authorized, you don't have the permission");
+    error.status = 403;
+    next(error);
+  }
+};
 
 router
   .route('/products/:id')
   .get(controller.getSpecificProduct)
-  .delete(controller.deleteProduct);
+  .delete(authMW, authFunction, controller.deleteProduct);
 
 router
   .route('/products')
+
   .get(controller.getAllProducts)
   .post(
     [
@@ -33,6 +43,8 @@ router
     ],
 
     validationMW,
+    authMW,
+    authFunction,
     controller.addNewProduct
   )
   .put(
@@ -60,6 +72,8 @@ router
     ],
 
     validationMW,
+    authMW,
+    authFunction,
     controller.updateProduct
   );
 
