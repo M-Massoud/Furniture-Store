@@ -76,14 +76,14 @@ const schema = new mongoose.Schema({
         required:true
     },
     wishList:{
-        type:[{type:Number,unique:true}],
+        type:[{type:Number}],
         ref:"products"
     },
     payment:{
         type:paymentSchema,
     },
     orders:{
-        type:[{type:ordersSchema,unique:true}],
+        type:[{type:ordersSchema}],
     },
 })
 

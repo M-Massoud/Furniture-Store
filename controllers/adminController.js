@@ -31,19 +31,21 @@ module.exports.getAdminById = (request, response, next) => {
 };
 
 module.exports.createAdmin = (request, response, next) => {
-  let object = new Admin({
-    _id: request.body.id,
-    firstName: request.body.firstName,
-    lastName: request.body.lastName,
-    password: bcrypt.hashSync(request.body.password, salt),
-    email: request.body.email,
+  bcrypt.hash(request.body.password, 8, function (err, hash) {
+    let object = new Admin({
+      _id: request.body.id,
+      firstName: request.body.firstName,
+      lastName: request.body.lastName,
+      password: hash,
+      email: request.body.email,
+    });
+    object
+      .save()
+      .then(data => {
+        response.status(201).json({ data: 'added' });
+      })
+      .catch(error => next(error));
   });
-  object
-    .save()
-    .then(data => {
-      response.status(201).json({ data: 'added' });
-    })
-    .catch(error => next(error));
 };
 
 module.exports.updateAdmin = async (request, response, next) => {
