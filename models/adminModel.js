@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+const mongoose = require('mongoose');
 
 // A- craete schema object
 const schema = new mongoose.Schema({
@@ -16,9 +15,7 @@ const schema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-
-
 //B- mapping
 
 //setter
-mongoose.model("admin", schema);
+mongoose.model('admin', schema);
