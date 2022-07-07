@@ -16,7 +16,10 @@ router
       body('title')
         .isString()
         .withMessage('Category title shoud be characters'),
-      body('subCategory').optional().isArray({ type: Number }).withMessage('sub Category should be number'),
+      body('subCategory')
+        .optional()
+        .isArray({ type: Number })
+        .withMessage('sub Category should be number'),
     ],
     validationMW,
     controller.createCategory
@@ -27,9 +30,13 @@ router
     [
       body('id').isNumeric().withMessage('Category id shoud be number'),
       body('title')
+        .optional()
         .isString()
         .withMessage('Category title shoud be characters'),
-      body('subCategory').optional().isArray({ type: Number }).withMessage('sub Category should be number'),
+      body('subCategory')
+        .optional()
+        .isArray({ type: Number })
+        .withMessage('sub Category should be number'),
     ],
     validationMW,
     controller.updateCategory
@@ -53,7 +60,9 @@ router
   .delete(
     authMW,
     adminAuthorizationMW,
-    param('id').isNumeric().withMessage('category id is required and should be number'),
+    param('id')
+      .isNumeric()
+      .withMessage('category id is required and should be number'),
     validationMW,
     controller.deleteCategorySubCategoryById
   );

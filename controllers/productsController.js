@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 require('./../models/productModel');
 let Products = mongoose.model('products');
+const fs = require('fs');
+const { unlink } = require('node:fs/promises');
+const path = require('path');
 
 module.exports.getAllProducts = (request, response, next) => {
   Products.find({})
@@ -13,7 +16,7 @@ module.exports.getAllProducts = (request, response, next) => {
 };
 
 module.exports.addNewProduct = (request, response, error) => {
-  console.log(request.file);
+  // console.log(request.file);
   let newProduct = new Products({
     name: request.body.name,
     description: request.body.description,
@@ -47,6 +50,9 @@ module.exports.updateProduct = async (request, response, next) => {
         data[key] = request.body[key];
       }
 
+      //to update image
+      data.image = request.file?.filename || data.image;
+
       await data.save();
       response.status(200).json({ data: 'product updated successfully' });
     }
@@ -69,8 +75,24 @@ module.exports.deleteProduct = (request, response, next) => {
   Products.findByIdAndDelete({ _id: request.params.id })
 
     .then(data => {
+      // console.log(data.image);
+
+      // `./uploads/products-imgs/${data.image}`
+
+      productImgPath = path.join(
+        __dirname,
+        '..',
+        'uploads',
+        'products-imgs',
+        data.image
+      );
+      console.log(productImgPath);
+
+      fs.unlinkSync(productImgPath);
       if (data == null) next(new Error(' needed product cannot be deleted'));
-      response.status(200).json('product deleted successfully' + data);
+      response
+        .status(200)
+        .json({ message: 'product deleted successfully', data });
     })
     .catch(error => {
       next(error);

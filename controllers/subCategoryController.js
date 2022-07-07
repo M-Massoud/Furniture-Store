@@ -5,8 +5,8 @@ const { body } = require('express-validator');
 let subCategory = mongoose.model('subCategory');
 
 module.exports.getAllsubCategories = (request, response) => {
-  console.log(request.query);
-  console.log(request.params);
+  // console.log(request.query);
+  // console.log(request.params);
   subCategory
     .find({})
     .populate({ path: 'products', select: 'name price' })
@@ -38,26 +38,31 @@ module.exports.createsubCategory = (request, response, next) => {
   object
     .save()
     .then(data => {
-      response.status(201).json({ data: 'added' });
+      response.status(201).json({ message: 'added successfully', data });
     })
-    .catch(error => next(error));
+    .catch(error => {
+      console.log('errror' + error);
+      next(error);
+    });
 };
 
 module.exports.updatesubCategory = async (request, response, next) => {
+  // console.log(request.body.id);
   try {
     const data = await subCategory.findOne({ _id: request.body.id });
 
-    for (const key in request.body) {
-      if (typeof request.body[key] == 'object') {
+    for (let key in request.body) {
+      console.log(key);
+      if (request.body[key].constructor.name == 'Array') {
         for (let item in request.body[key]) {
-          data[key][item] = request.body[key][item];
+          data[key].push(request.body[key][item]);
         }
       } else data[key] = request.body[key];
     }
 
     await data.save();
 
-    response.status(200).json({ data: 'updated' });
+    response.status(200).json({ data: 'sub Category Updated Successfully' });
   } catch (error) {
     next(error);
   }
@@ -67,7 +72,14 @@ module.exports.deletesubCategory = (request, response, next) => {
   subCategory
     .deleteOne({ _id: request.params.id }, {})
     .then(data => {
-      response.status(200).json(data);
+      if (data == null) {
+        next(new Error('needed sub category not found'));
+      } else
+        response
+          .status(200)
+          .json({ data: 'sub category Deleted Successfully' });
     })
-    .catch(error => next(error));
+    .catch(error => {
+      next(error);
+    });
 };

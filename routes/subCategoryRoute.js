@@ -1,19 +1,11 @@
 const express = require('express');
-const { body, param } = require('express-validator');
+const { param, body } = require('express-validator');
 const controller = require('../controllers/subCategoryController');
 const validationMW = require('../middlewares/validationMW');
 const router = express.Router();
 const authMW = require('../middlewares/authMW');
 const adminAuthorizationMW = require('../middlewares/adminAuthorizationMW');
 
-const authFunction = (request, response, next) => {
-  if (request.role == 'admin') next();
-  else {
-    let error = new Error("Not authorized, you don't have the permission");
-    error.status = 403;
-    next(error);
-  }
-};
 router
   .route('/subCategory')
   .get(controller.getAllsubCategories)
@@ -21,12 +13,13 @@ router
     authMW,
     adminAuthorizationMW,
     [
-      body('id').isEmpty().withMessage('Category id shoud be number'),
-      body('title').isAlpha().withMessage('Category title shoud be characters'),
+      body('title')
+        .isString()
+        .withMessage('sub category title shoud be characters'),
       body('products')
         .optional()
-        .isNumeric()
-        .withMessage('products ids should be number'),
+        .isArray({ type: Number })
+        .withMessage('products should be array of numbers'),
     ],
 
     validationMW,
@@ -36,11 +29,14 @@ router
     authMW,
     adminAuthorizationMW,
     [
-      body('title').isAlpha().withMessage('Category title shoud be characters'),
+      body('title')
+        .optional()
+        .isString()
+        .withMessage('sub category title shoud be characters'),
       body('products')
         .optional()
-        .isArray()
-        .withMessage('products ids should be number'),
+        .isArray({ type: Number })
+        .withMessage('products should be array of numbers'),
     ],
 
     validationMW,
@@ -54,10 +50,8 @@ router
     authMW,
     adminAuthorizationMW,
     param('id')
-      .isObject()
-      .withMessage('category id should be number')
-      .isEmpty()
-      .withMessage("category id shouldn't be empty"),
+      .isNumeric()
+      .withMessage('not a valid sub category id , should be a number'),
     validationMW,
     controller.deletesubCategory
   );

@@ -4,15 +4,18 @@ const { body, validationResult } = require('express-validator');
 const controller = require('./../controllers/productsController');
 const validationMW = require('../middlewares/validationMW');
 const authMW = require('./../middlewares/authMW');
+const adminAuthorizationMW = require('../middlewares/adminAuthorizationMW');
 
-const authFunction = (request, response, next) => {
-  if (request.role == 'admin') next();
-  else {
-    let error = new Error("Not authorized, you don't have the permission");
-    error.status = 403;
-    next(error);
-  }
-};
+const { unlink } = require('node:fs/promises');
+
+// const authFunction = (request, response, next) => {
+//   if (request.role == 'admin') next();
+//   else {
+//     let error = new Error("Not authorized, you don't have the permission");
+//     error.status = 403;
+//     next(error);
+//   }
+// };
 
 // upload product image functionality
 const multer = require('multer');
@@ -28,18 +31,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// const deleteProductImage= fs.unlink(req.file.path, (err) => /* ... */)
+
 ////////////////////////////////
 
 router
   .route('/products/:id')
   .get(controller.getSpecificProduct)
-  .delete(authMW, authFunction, controller.deleteProduct);
+  .delete(authMW, adminAuthorizationMW, controller.deleteProduct);
 
 router
   .route('/products')
 
   .get(controller.getAllProducts)
   .post(
+    authMW,
+    adminAuthorizationMW,
     upload.single('image'),
 
     [
@@ -61,12 +68,13 @@ router
         .withMessage('product sub categordy is required '),
     ],
     validationMW,
-
-    authMW,
-    authFunction,
     controller.addNewProduct
   )
   .put(
+    authMW,
+    adminAuthorizationMW,
+    upload.single('image'),
+
     [
       body('name')
         .optional()
@@ -91,9 +99,16 @@ router
     ],
 
     validationMW,
-    authMW,
-    authFunction,
     controller.updateProduct
   );
 
 module.exports = router;
+
+// const deletePost = async (req, res) => {
+//   const post = await Post.findByIdAndDelete(req.params.id);
+
+//   fs.unlinkSync(post.image); //delete image when delete post
+
+//   req.flash('success_message', `The post ${post.title} has beed deleted`);
+//   res.redirect('/admin/posts');
+// };
