@@ -3,10 +3,10 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const orderSchema = new mongoose.Schema({
     _id:Number,
-    userId: Number,
-    product: { _id: Number, name: String },
-    date: { type: Date, default: Date.now },
-    price: Number,
+    userId:{type:Number,ref:"users"},
+    product: { type:[{type: Number}],ref:"products"},
+    created_at: { type: Date, default: Date.now },
+    totalPrice: Number,
     quantity: Number,
     Status:{ type: String, enum: ['fullfilled', 'pending', 'cancelled'] }
 });//orders Schema

@@ -1,9 +1,11 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { body,param } = require('express-validator');
 const controller = require('../controllers/subCategoryController');
 const validationMW = require('../middlewares/validationMW');
 const router = express.Router();
 const authMW = require('../middlewares/authMW');
+const adminAuthorizationMW = require('../middlewares/adminAuthorizationMW');
+
 const authFunction = (request, response, next) => {
   if (request.role == 'admin') next();
   else {
@@ -16,22 +18,31 @@ router
   .route('/subCategory')
   .get(controller.getAllsubCategories)
   .post(
+    authMW,
+    adminAuthorizationMW,
     [
       body('id').isEmpty().withMessage('Category id shoud be number'),
-      body('title').isAlpha().withMessage('Category title shoud be alpha'),
+      body('title').isAlpha().withMessage('Category title shoud be characters'),
+      body('products')
+        .optional()
+        .isNumeric()
+        .withMessage('products ids should be number'),
     ],
-    authMW,
-    authFunction,
+
     validationMW,
     controller.createsubCategory
   )
   .put(
-    [
-      //   body("id").isEmpty().withMessage("Category id shoud be number"),
-      body('title').isAlpha().withMessage('Category title shoud be alpha'),
-    ],
     authMW,
-    authFunction,
+    adminAuthorizationMW,
+    [
+      body('title').isAlpha().withMessage('Category title shoud be characters'),
+      body('products')
+        .optional()
+        .isArray()
+        .withMessage('products ids should be number'),
+    ],
+
     validationMW,
     controller.updatesubCategory
   );
@@ -40,9 +51,14 @@ router
   .route('/subCategory/:id')
   .get(controller.getsubCategoryById)
   .delete(
-    body('_id').isObject().isEmpty(),
     authMW,
-    authFunction,
+    adminAuthorizationMW,
+    param('id')
+      .isObject()
+      .withMessage('category id should be number')
+      .isEmpty()
+      .withMessage("category id shouldn't be empty"),
+    validationMW,
     controller.deletesubCategory
   );
 

@@ -10,14 +10,15 @@ const forgotUserPasswordRoute = require('./routes/forgotUserPasswordRoute');
 const changeUserPasswordRoute = require('./routes/changeUserPasswordRoute');
 const usersRoute = require('./routes/usersRoute');
 const productsRoute = require('./routes/productsRoute');
-const ordersRoute = require('./routes/ordersRoute');
+const ordersRoute = require('./routes/ordersRout');
 const adminRoute = require('./routes/adminRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const subCategoryRoute = require('./routes/subCategoryRoute');
+const multer = require('multer');
 
 const server = express();
-const port = 8080;
-// const port = 8081;
+// const port = 8080;
+const port = 8081;
 
 // connect to database and express server
 
@@ -40,7 +41,6 @@ server.use(cors());
 // routes
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-
 server.get('/home', (request, response) => {
   response.send('this is the home page');
 });

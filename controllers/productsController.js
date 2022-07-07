@@ -13,13 +13,15 @@ module.exports.getAllProducts = (request, response, next) => {
 };
 
 module.exports.addNewProduct = (request, response, error) => {
+  console.log(request.file);
   let newProduct = new Products({
-    description: request.body.description,
     name: request.body.name,
+    description: request.body.description,
     stockAmount: request.body.stockAmount,
     price: request.body.price,
     'subCategory.id': request.body.subCategory.id,
     'subCategory.title': request.body.subCategory.title,
+    image: request.file?.filename || '9b6c508fb75323001928cdd089bc14eb',
   });
   newProduct
     .save()
