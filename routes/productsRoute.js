@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const controller = require('./../controllers/productsController');
 const validationMW = require('../middlewares/validationMW');
 const authMW = require('./../middlewares/authMW');
+
 const authFunction = (request, response, next) => {
   if (request.role == 'admin') next();
   else {
@@ -12,6 +13,22 @@ const authFunction = (request, response, next) => {
     next(error);
   }
 };
+
+// upload product image functionality
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/products-imgs');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+////////////////////////////////
 
 router
   .route('/products/:id')
@@ -23,6 +40,8 @@ router
 
   .get(controller.getAllProducts)
   .post(
+    upload.single('image'),
+
     [
       body('name')
         .isString()
@@ -41,8 +60,8 @@ router
         .isObject()
         .withMessage('product sub categordy is required '),
     ],
-
     validationMW,
+
     authMW,
     authFunction,
     controller.addNewProduct

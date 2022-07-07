@@ -22,7 +22,7 @@ module.exports.getsubCategoryById = (request, response, next) => {
   subCategory
     .findOne({ _id: request.params.id })
     .then(data => {
-      if (data == null) next(new Error(' subCategory not found'));
+      if (data == null) next(new Error('subCategory not found'));
       response.status(200).json(data);
     })
     .catch(error => {

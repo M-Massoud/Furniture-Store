@@ -31,7 +31,7 @@ module.exports.getAdminById = (request, response, next) => {
 };
 
 module.exports.createAdmin = (request, response, next) => {
-  bcrypt.hash(request.body.password, 8, function (err, hash) {
+  bcrypt.hash(request.body.password, salt, function (err, hash) {
     let object = new Admin({
       _id: request.body.id,
       firstName: request.body.firstName,

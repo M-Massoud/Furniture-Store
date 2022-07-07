@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
 module.exports.loginUser = (request, response, next) => {
+
     User.findOne(
         { email: request.body.email }, { password: 1 })
         .then(userData => {
@@ -23,6 +24,7 @@ module.exports.loginUser = (request, response, next) => {
                             process.env.secret_Key, { expiresIn: "7d" })
 
                         response.status(200).json({ token, message: "login user" });
+                        console.log("pass");
                     }
                     else {
                         let error = new Error("invalid email or password");

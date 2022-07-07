@@ -14,6 +14,7 @@ const ordersRoute = require('./routes/ordersRoute');
 const adminRoute = require('./routes/adminRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const subCategoryRoute = require('./routes/subCategoryRoute');
+const multer = require('multer');
 
 const server = express();
 const port = 8080;
@@ -40,7 +41,6 @@ server.use(cors());
 // routes
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-
 server.get('/home', (request, response) => {
   response.send('this is the home page');
 });

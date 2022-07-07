@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
+const arrayUniquePlugin = require('mongoose-unique-array');
+
 // A- craete schema object
 const schema = new mongoose.Schema(
   {
@@ -9,17 +11,16 @@ const schema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      unique: true,
     },
-    subCategory: [
-      {
-        type: mongoose.Schema.Types.Number,
-        ref: 'subCategory',
-      },
-    ],
-  },
-  { id: false }
+    subCategory: {
+      type: [{ type: Number }],
+      ref: "subCategory"
+    },
+  }
 );
-schema.plugin(AutoIncrement, { id: 'category_id_counter', inc_field: '_id' });
+schema.plugin(AutoIncrement, { id: 'category_id_counter' });
+schema.plugin(arrayUniquePlugin);
 
 //B- mapping
 
