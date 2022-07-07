@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
 require('../models/usersModel');
 let User = mongoose.model('users');
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(+process.env.saltRounds);
 
 module.exports.forgotUserPassword = async (request, response, next) => {
     try {
@@ -12,7 +13,7 @@ module.exports.forgotUserPassword = async (request, response, next) => {
             next(new Error("User Data Is Incorrect"));
         }
         else {
-            bcrypt.hash(request.body.newPassword, 8, async function (err, hash) {
+            bcrypt.hash(request.body.newPassword, salt, async function (err, hash) {
                 await User.updateOne({ _id: userData.id }, { $set: { password: hash } })
                 response.status(200).json({ data: "user password updated successfully" });
             });

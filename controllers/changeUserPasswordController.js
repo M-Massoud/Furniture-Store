@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 require('../models/usersModel');
 let User = mongoose.model('users');
 const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(+process.env.saltRounds);
 
 module.exports.changeUserPassword = async (request, response, next) => {
 
@@ -14,7 +15,7 @@ module.exports.changeUserPassword = async (request, response, next) => {
             if (request.body.oldPassword != request.body.newPassword) {
                 bcrypt.compare(request.body.oldPassword, userData.password).then(function (result) {
                     if (result == true) {
-                        bcrypt.hash(request.body.newPassword, 8, async function (err, hash) {
+                        bcrypt.hash(request.body.newPassword, salt, async function (err, hash) {
                             await User.updateOne({ _id: request.id }, { $set: { password: hash } })
                             response.status(200).json({ data: "user password updated successfully" });
                         });

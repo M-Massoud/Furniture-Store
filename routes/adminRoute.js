@@ -10,6 +10,7 @@ const router = express.Router();
 
 router
   .route('/admin')
+  .all(authMW, adminAuthorizationMW)
   // get all admins
   .get(controller.getAllAdmins)
   // create a new admin

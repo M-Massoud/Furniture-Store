@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
 require('../models/usersModel');
-
 let User = mongoose.model('users');
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(+process.env.saltRounds);
 
 module.exports.getAllUsers = (request, response, next) => {
   User.find({})
@@ -18,7 +17,7 @@ module.exports.getAllUsers = (request, response, next) => {
 
 
 module.exports.createUser = (request, response, next) => {
-  bcrypt.hash(request.body.password, 8, function (err, hash) {
+  bcrypt.hash(request.body.password, salt, function (err, hash) {
     let object = new User({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
