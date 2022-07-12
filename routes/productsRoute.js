@@ -112,3 +112,10 @@ module.exports = router;
 //   req.flash('success_message', `The post ${post.title} has beed deleted`);
 //   res.redirect('/admin/posts');
 // };
+
+router
+  .route('/products/page/:pageNumber')
+
+  .get(controller.getAllProductsByPageNumber)
+
+module.exports = router;
