@@ -98,3 +98,25 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
+
+module.exports.getAllProductsByPageNumber = async (request, response, next) => {
+  try {
+    const requestedPageNumber = request.params.pageNumber;
+    const maxProductsNumberInPage = 10;
+
+    const startFromSelectedProductId = ((requestedPageNumber * maxProductsNumberInPage) - maxProductsNumberInPage);
+    const endToSelectedProductId = (requestedPageNumber * maxProductsNumberInPage);
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = (numberOfProducts / maxProductsNumberInPage);
+
+    const products = await Products.find({
+      '_id': { '$gt': startFromSelectedProductId, '$lte': endToSelectedProductId }
+    });
+
+    response.status(200).json({ data: { 'maxPagesNumber': maxPagesNumber, 'products': products } });
+  }
+  catch (error) {
+    next(error);
+  }
+};

@@ -23,6 +23,7 @@ const paymentSchema = new mongoose.Schema({
     cardType:{
         type:String,
         enum : ['visa','mastercard','meza'],
+        default: 'visa',
     },
     cardNumber:{
         type:Number,
