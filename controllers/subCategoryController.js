@@ -21,6 +21,7 @@ module.exports.getAllsubCategories = (request, response) => {
 module.exports.getsubCategoryById = (request, response, next) => {
   subCategory
     .findOne({ _id: request.params.id })
+    .populate({ path: 'products', select: 'name description price discount' })
     .then(data => {
       if (data == null) next(new Error('subCategory not found'));
       response.status(200).json(data);

@@ -31,8 +31,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// const deleteProductImage= fs.unlink(req.file.path, (err) => /* ... */)
-
 ////////////////////////////////
 
 router
@@ -104,18 +102,9 @@ router
 
 module.exports = router;
 
-// const deletePost = async (req, res) => {
-//   const post = await Post.findByIdAndDelete(req.params.id);
-
-//   fs.unlinkSync(post.image); //delete image when delete post
-
-//   req.flash('success_message', `The post ${post.title} has beed deleted`);
-//   res.redirect('/admin/posts');
-// };
-
 router
   .route('/products/page/:pageNumber')
 
-  .get(controller.getAllProductsByPageNumber)
+  .get(controller.getAllProductsByPageNumber);
 
 module.exports = router;

@@ -22,9 +22,10 @@ module.exports.addNewProduct = (request, response, error) => {
     description: request.body.description,
     stockAmount: request.body.stockAmount,
     price: request.body.price,
+    discount: request.body.discount,
     'subCategory.id': request.body.subCategory.id,
     'subCategory.title': request.body.subCategory.title,
-    image: request.file?.filename || '9b6c508fb75323001928cdd089bc14eb',
+    image: request.file?.filename || 'default-product-img.jpg',
   });
   newProduct
     .save()
@@ -104,19 +105,22 @@ module.exports.getAllProductsByPageNumber = async (request, response, next) => {
     const requestedPageNumber = request.params.pageNumber;
     const maxProductsNumberInPage = 10;
 
-    const startFromSelectedProductId = ((requestedPageNumber * maxProductsNumberInPage) - maxProductsNumberInPage);
-    const endToSelectedProductId = (requestedPageNumber * maxProductsNumberInPage);
+    const startFromSelectedProductId =
+      requestedPageNumber * maxProductsNumberInPage - maxProductsNumberInPage;
+    const endToSelectedProductId =
+      requestedPageNumber * maxProductsNumberInPage;
 
     const numberOfProducts = await Products.count();
-    const maxPagesNumber = (numberOfProducts / maxProductsNumberInPage);
+    const maxPagesNumber = numberOfProducts / maxProductsNumberInPage;
 
     const products = await Products.find({
-      '_id': { '$gt': startFromSelectedProductId, '$lte': endToSelectedProductId }
+      _id: { $gt: startFromSelectedProductId, $lte: endToSelectedProductId },
     });
 
-    response.status(200).json({ data: { 'maxPagesNumber': maxPagesNumber, 'products': products } });
-  }
-  catch (error) {
+    response
+      .status(200)
+      .json({ data: { maxPagesNumber: maxPagesNumber, products: products } });
+  } catch (error) {
     next(error);
   }
 };

@@ -17,8 +17,8 @@ const subCategoryRoute = require('./routes/subCategoryRoute');
 const multer = require('multer');
 
 const server = express();
-// const port = 8080;
-const port = 8081;
+const port = 8080;
+// const port = 8081;
 
 // connect to database and express server
 
