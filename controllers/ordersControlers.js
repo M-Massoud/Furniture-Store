@@ -81,3 +81,30 @@ module.exports.deleteOrders = function (request, response,next) {
 //         .catch(error => next(error))
    
 // };
+
+// if you want to use pagination uncomment this
+
+// module.exports.getAllOrdersByPageNumber = async (request, response, next) => {
+//   try {
+//     const requestedPageNumber = request.params.pageNumber;
+//     const maxItemsNumberInPage = 10;
+
+//     const startFromSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
+//     const endToSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage;
+
+//     const numberOfOrders = await Orders.count();
+//     const maxPagesNumber = Math.ceil(numberOfOrders / maxItemsNumberInPage);
+
+//     const orders = await Orders.find({
+//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
+//     });
+
+//     response
+//       .status(200)
+//       .json({ resData: { maxPagesNumber: maxPagesNumber, orders: orders } });
+//   } catch (error) {
+//     next(error);
+//   }
+// };

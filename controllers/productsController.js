@@ -103,23 +103,23 @@ module.exports.deleteProduct = (request, response, next) => {
 module.exports.getAllProductsByPageNumber = async (request, response, next) => {
   try {
     const requestedPageNumber = request.params.pageNumber;
-    const maxProductsNumberInPage = 10;
+    const maxItemsNumberInPage = 10;
 
-    const startFromSelectedProductId =
-      requestedPageNumber * maxProductsNumberInPage - maxProductsNumberInPage;
-    const endToSelectedProductId =
-      requestedPageNumber * maxProductsNumberInPage;
+    const startFromSelectedItemId =
+      requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
+    const endToSelectedItemId =
+      requestedPageNumber * maxItemsNumberInPage;
 
     const numberOfProducts = await Products.count();
-    const maxPagesNumber = numberOfProducts / maxProductsNumberInPage;
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
 
     const products = await Products.find({
-      _id: { $gt: startFromSelectedProductId, $lte: endToSelectedProductId },
+      _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
     });
 
     response
       .status(200)
-      .json({ data: { maxPagesNumber: maxPagesNumber, products: products } });
+      .json({ resData: { maxPagesNumber: maxPagesNumber, products: products } });
   } catch (error) {
     next(error);
   }

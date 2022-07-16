@@ -53,7 +53,7 @@ router.route("/users")
         body("orders").optional().isArray({ type: Object }).withMessage("orders should be array of objects"),
         check('orders.*.id').optional().isNumeric().withMessage("order id should be number"),
         check('orders.*.productId').optional().isNumeric().withMessage("orders productId should be number"),
-        check('orders.*.productTitle').optional().isString().withMessage("orders productTitle should be string"),
+        check('orders.*.productName').optional().isString().withMessage("orders productName should be string"),
     ],
         validationMW,
         controller.updateUser)
@@ -89,7 +89,7 @@ router.route("/user/:id")
         body("orders").optional().isArray({ type: Object }).withMessage("orders should be array of objects"),
         check('orders.*.id').optional().isNumeric().withMessage("order id should be number"),
         check('orders.*.productId').optional().isNumeric().withMessage("orders productId should be number"),
-        check('orders.*.productTitle').optional().isString().withMessage("orders productTitle should be string"),
+        check('orders.*.productName').optional().isString().withMessage("orders productName should be string"),
     ],
         validationMW,
         controller.updateUserProfile)
@@ -105,6 +105,12 @@ router.route("/user/:id/wishlist")
     ],
         validationMW,
         controller.getUserWhishListByUserId)
+    .put(authMW, adminOrUserByIdAuthorizationMW, [
+        param("id").isNumeric().withMessage("id should be numbers"),
+        body("wishList").optional().isArray({ type: Number }).withMessage("wishList should be array of productId"),
+    ],
+        validationMW,
+        controller.addUserWhishListByUserId)
     .delete(authMW, adminOrUserByIdAuthorizationMW, [
         param("id").isNumeric().withMessage("id should be numbers"),
         body("wishList").optional().isArray({ type: Number }).withMessage("wishList should be array of productId"),
@@ -114,3 +120,11 @@ router.route("/user/:id/wishlist")
 
 
 module.exports = router;
+
+// if you want to use pagination uncomment this
+
+// router
+//   .route('/users/page/:pageNumber')
+//   .get(controller.getAllUsersByPageNumber);
+
+// module.exports = router;
