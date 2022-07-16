@@ -57,3 +57,11 @@ router
   );
 
 module.exports = router;
+
+// if you want to use pagination uncomment this
+
+// router
+//   .route('/subCategories/page/:pageNumber')
+//   .get(controller.getAllSubCategoriesByPageNumber);
+
+// module.exports = router;

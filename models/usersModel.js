@@ -41,7 +41,7 @@ const ordersSchema = new mongoose.Schema({
     productId:{
         type:Number,       
     },
-    productTitle:{
+    productName:{
         type:String,
     }, 
 });

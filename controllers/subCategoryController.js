@@ -84,3 +84,30 @@ module.exports.deletesubCategory = (request, response, next) => {
       next(error);
     });
 };
+
+// if you want to use pagination uncomment this
+
+// module.exports.getAllSubCategoriesByPageNumber = async (request, response, next) => {
+//   try {
+//     const requestedPageNumber = request.params.pageNumber;
+//     const maxItemsNumberInPage = 10;
+
+//     const startFromSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
+//     const endToSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage;
+
+//     const numberOfSubCategories = await subCategory.count();
+//     const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage);
+
+//     const subCategories = await subCategory.find({
+//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
+//     }).populate({ path: 'products', select: 'name price' });
+
+//     response
+//       .status(200)
+//       .json({ resData: { maxPagesNumber: maxPagesNumber, subCategories: subCategories } });
+//   } catch (error) {
+//     next(error);
+//   }
+// };

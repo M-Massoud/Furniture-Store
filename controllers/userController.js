@@ -14,8 +14,6 @@ module.exports.getAllUsers = (request, response, next) => {
     });
 };
 
-
-
 module.exports.createUser = (request, response, next) => {
   bcrypt.hash(request.body.password, salt, function (err, hash) {
     let object = new User({
@@ -143,7 +141,7 @@ module.exports.deleteUserById = (request, response, next) => {
 };
 
 module.exports.getUserWhishListByUserId = (request, response, next) => {
-  User.find({ _id: request.params.id }).populate('wishList')
+  User.find({ _id: request.params.id }, { wishList: 1 }).populate('wishList')
     .then(data => {
       if (data == null) {
         next(new Error('user wish list not found'));
@@ -152,6 +150,16 @@ module.exports.getUserWhishListByUserId = (request, response, next) => {
     .catch(error => {
       next(error);
     });
+};
+
+module.exports.addUserWhishListByUserId = async (request, response, next) => {
+  try {
+    let data = await User.updateOne({ _id: request.params.id }, { $push: { wishList: request.body.wishList } });
+    console.log(data);
+    response.status(200).json({ data: 'user data updated successfully' });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.deleteUserWhishListByUserId = (request, response, next) => {
@@ -170,3 +178,31 @@ module.exports.deleteUserWhishListByUserId = (request, response, next) => {
       next(error);
     });
 };
+
+
+// if you want to use pagination uncomment this
+
+// module.exports.getAllUsersByPageNumber = async (request, response, next) => {
+//   try {
+//     const requestedPageNumber = request.params.pageNumber;
+//     const maxItemsNumberInPage = 10;
+
+//     const startFromSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
+//     const endToSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage;
+
+//     const numberOfUsers = await User.count();
+//     const maxPagesNumber = Math.ceil(numberOfUsers / maxItemsNumberInPage);
+
+//     const users = await User.find({
+//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
+//     });
+
+//     response
+//       .status(200)
+//       .json({ resData: { maxPagesNumber: maxPagesNumber, users: users } });
+//   } catch (error) {
+//     next(error);
+//   }
+// };

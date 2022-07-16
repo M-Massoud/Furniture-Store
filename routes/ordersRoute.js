@@ -19,3 +19,11 @@ router.route("/orders/:id")
 
 
 module.exports = router;
+
+// if you want to use pagination uncomment this
+
+// router
+//   .route('/orders/page/:pageNumber')
+//   .get(controller.getAllOrdersByPageNumber);
+
+// module.exports = router;

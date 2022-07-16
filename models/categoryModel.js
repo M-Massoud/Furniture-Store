@@ -12,6 +12,10 @@ const schema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  subCategory: {
+    type: [{ type: Number }],
+    ref: "subCategory"
+  },
 });
 schema.plugin(AutoIncrement, { id: 'category_id_counter' });
 schema.plugin(arrayUniquePlugin);

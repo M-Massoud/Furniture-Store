@@ -16,7 +16,7 @@ module.exports.getAllCategories = (request, response) => {
 };
 
 module.exports.getCategoryById = (request, response, next) => {
-  Category.findOne({ _id: request.params.id })
+  Category.findOne({ _id: request.params.id }).populate('subCategory')//add_amer
     .then(data => {
       if (data == null) next(new Error(' Category not found'));
       response.status(200).json(data);
@@ -98,3 +98,30 @@ module.exports.deleteCategorySubCategoryById = (request, response, next) => {
       next(error);
     });
 };
+
+// if you want to use pagination uncomment this
+
+// module.exports.getAllCategoriesByPageNumber = async (request, response, next) => {
+//   try {
+//     const requestedPageNumber = request.params.pageNumber;
+//     const maxItemsNumberInPage = 10;
+
+//     const startFromSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
+//     const endToSelectedItemId =
+//       requestedPageNumber * maxItemsNumberInPage;
+
+//     const numberOfCategories = await Category.count();
+//     const maxPagesNumber = Math.ceil(numberOfCategories / maxItemsNumberInPage);
+
+//     const categories = await Category.find({
+//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
+//     }).populate({ path: 'subCategory', select: 'title' });
+
+//     response
+//       .status(200)
+//       .json({ resData: { maxPagesNumber: maxPagesNumber, categories: categories } });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
