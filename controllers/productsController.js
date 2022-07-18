@@ -5,14 +5,22 @@ const fs = require('fs');
 const { unlink } = require('node:fs/promises');
 const path = require('path');
 
-module.exports.getAllProducts = (request, response, next) => {
-  Products.find({})
-    .then(data => {
-      response.status(200).json(data);
-    })
-    .catch(error => {
-      next(error);
-    });
+module.exports.getAllProducts = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
+
+    const products = await Products.find().skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+
+    response
+      .status(200)
+      .json({ resData: { maxPagesNumber: maxPagesNumber, products: products } });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.addNewProduct = (request, response, error) => {
@@ -98,29 +106,4 @@ module.exports.deleteProduct = (request, response, next) => {
     .catch(error => {
       next(error);
     });
-};
-
-module.exports.getAllProductsByPageNumber = async (request, response, next) => {
-  try {
-    const requestedPageNumber = request.params.pageNumber;
-    const maxItemsNumberInPage = 10;
-
-    const startFromSelectedItemId =
-      requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
-    const endToSelectedItemId =
-      requestedPageNumber * maxItemsNumberInPage;
-
-    const numberOfProducts = await Products.count();
-    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
-
-    const products = await Products.find({
-      _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
-    });
-
-    response
-      .status(200)
-      .json({ resData: { maxPagesNumber: maxPagesNumber, products: products } });
-  } catch (error) {
-    next(error);
-  }
 };

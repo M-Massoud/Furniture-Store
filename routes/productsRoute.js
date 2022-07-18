@@ -102,9 +102,3 @@ router
 
 module.exports = router;
 
-router
-  .route('/products/page/:pageNumber')
-
-  .get(controller.getAllProductsByPageNumber);
-
-module.exports = router;

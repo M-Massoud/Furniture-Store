@@ -4,14 +4,22 @@ let User = mongoose.model('users');
 const bcrypt = require('bcrypt');
 const salt = bcrypt.genSaltSync(+process.env.saltRounds);
 
-module.exports.getAllUsers = (request, response, next) => {
-  User.find({})
-    .then(data => {
-      response.status(200).json(data);
-    })
-    .catch(error => {
-      next(error);
-    });
+module.exports.getAllUsers = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
+
+    const numberOfUsers = await User.count();
+    const maxPagesNumber = Math.ceil(numberOfUsers / maxItemsNumberInPage);
+    const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
+
+    const users = await User.find().skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+
+    response
+      .status(200)
+      .json({ resData: { maxPagesNumber: maxPagesNumber, users: users } });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.createUser = (request, response, next) => {

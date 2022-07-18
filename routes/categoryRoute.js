@@ -68,11 +68,3 @@ router
   );
 
 module.exports = router;
-
-// if you want to use pagination uncomment this
-
-// router
-//   .route('/categories/page/:pageNumber')
-//   .get(controller.getAllCategoriesByPageNumber);
-
-// module.exports = router;

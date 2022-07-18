@@ -120,11 +120,3 @@ router.route("/user/:id/wishlist")
 
 
 module.exports = router;
-
-// if you want to use pagination uncomment this
-
-// router
-//   .route('/users/page/:pageNumber')
-//   .get(controller.getAllUsersByPageNumber);
-
-// module.exports = router;
