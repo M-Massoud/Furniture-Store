@@ -4,18 +4,23 @@ const { body } = require('express-validator');
 
 let subCategory = mongoose.model('subCategory');
 
-module.exports.getAllsubCategories = (request, response) => {
-  // console.log(request.query);
-  // console.log(request.params);
-  subCategory
-    .find({})
-    .populate({ path: 'products', select: 'name price' })
-    .then(data => {
-      response.status(200).json(data);
-    })
-    .catch(error => {
-      next(error);
-    });
+module.exports.getAllsubCategories = async (request, response) => {
+  try {
+    const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
+
+    const numberOfSubCategories = await subCategory.count();
+    const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage);
+    const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
+
+    const subCategories = await subCategory.find().populate({ path: 'products', select: 'name price' }).skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+
+    response
+      .status(200)
+      .json({ resData: { maxPagesNumber: maxPagesNumber, subCategories: subCategories } });
+  } catch (error) {
+    next(error);
+  }
+
 };
 
 module.exports.getsubCategoryById = (request, response, next) => {
@@ -84,30 +89,3 @@ module.exports.deletesubCategory = (request, response, next) => {
       next(error);
     });
 };
-
-// if you want to use pagination uncomment this
-
-// module.exports.getAllSubCategoriesByPageNumber = async (request, response, next) => {
-//   try {
-//     const requestedPageNumber = request.params.pageNumber;
-//     const maxItemsNumberInPage = 10;
-
-//     const startFromSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
-//     const endToSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage;
-
-//     const numberOfSubCategories = await subCategory.count();
-//     const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage);
-
-//     const subCategories = await subCategory.find({
-//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
-//     }).populate({ path: 'products', select: 'name price' });
-
-//     response
-//       .status(200)
-//       .json({ resData: { maxPagesNumber: maxPagesNumber, subCategories: subCategories } });
-//   } catch (error) {
-//     next(error);
-//   }
-// };

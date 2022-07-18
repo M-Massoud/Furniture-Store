@@ -4,10 +4,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const loginAdminRoute = require('./Routes/loginAdminRoute');
-const loginUserRoute = require('./Routes/loginUserRoute');
-const forgotUserPasswordRoute = require('./routes/forgotUserPasswordRoute');
-const changeUserPasswordRoute = require('./routes/changeUserPasswordRoute');
+const loginRoute = require('./Routes/loginRoute');
+const forgotPasswordRoute = require('./routes/forgotPasswordRoute');
+const changePasswordRoute = require('./routes/changePasswordRoute');
 const usersRoute = require('./routes/usersRoute');
 const productsRoute = require('./routes/productsRoute');
 const ordersRoute = require('./routes/ordersRoute');
@@ -45,16 +44,15 @@ server.get('/home', (request, response) => {
   response.send('this is the home page');
 });
 
-server.use(forgotUserPasswordRoute);
-server.use(loginAdminRoute);
-server.use(loginUserRoute);
+server.use(forgotPasswordRoute);
+server.use(loginRoute);
 server.use(usersRoute);
 server.use(productsRoute);
 server.use(ordersRoute);
 server.use(adminRoute);
 server.use(categoryRoute);
 server.use(subCategoryRoute);
-server.use(changeUserPasswordRoute);
+server.use(changePasswordRoute);
 
 // c- General middleware for not Found url pathes with 404 status code.
 server.use((request, response) => {
