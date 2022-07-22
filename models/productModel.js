@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const AutoIncrement = require('mongoose-sequence')(mongoose);
+const uniqueValidator = require('mongoose-unique-validator');
 
 const productsSchema = new mongoose.Schema({
   _id: Number,
-  name: { type: String, required: true },
+  name: { type: String, required: true ,unique: true},
   description: { type: String, required: true },
   stockAmount: Number,
   image: String,
@@ -16,6 +17,6 @@ const productsSchema = new mongoose.Schema({
   },
 });
 
-productsSchema.plugin(AutoIncrement, { id: 'productsCounter' });
+productsSchema.plugin(uniqueValidator).plugin(AutoIncrement, { id: 'productsCounter' });
 
 mongoose.model('products', productsSchema);

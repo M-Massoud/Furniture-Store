@@ -23,7 +23,7 @@ module.exports.getAllProducts = async (request, response, next) => {
   }
 };
 
-module.exports.addNewProduct = (request, response, error) => {
+module.exports.addNewProduct = (request, response, next) => {
   // console.log(request.file);
   let newProduct = new Products({
     name: request.body.name,
@@ -107,3 +107,44 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
+
+// highprice
+module.exports.sortHighPriceProducts = (request, response, next) => {
+  Products.find({}).sort({price:-1})
+    .then((data) => {
+      response.status(200).json(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+//lowprice
+module.exports.sortLowPriceProducts = (request, response, next) => {
+  Products.find({}).sort({price:1})
+    .then((data) => {
+      response.status(200).json(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+//less than price
+module.exports.lessPriceProducts = (request, response, next) => {
+  Products.find({price:{$lt:request.params.key}})
+    .then((data) => {
+      response.status(200).json(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+// highs than alary
+module.exports.highPriceProducts = (request, response, next) => {
+  Products.find({price:{$gt:request.params.key}})
+    .then((data) => {
+      response.status(200).json(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};    
