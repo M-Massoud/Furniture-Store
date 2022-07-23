@@ -16,10 +16,10 @@ const { unlink } = require('node:fs/promises');
 //     next(error);
 //   }
 // };
-
+// delete
 // upload product image functionality
 const multer = require('multer');
-
+// post
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/products-imgs');
@@ -36,7 +36,7 @@ const upload = multer({ storage: storage });
 router
   .route('/products/:id')
   .get(controller.getSpecificProduct)
-  .delete(authMW, adminAuthorizationMW, controller.deleteProduct);
+  .delete( authMW, adminAuthorizationMW,controller.deleteProduct);
 
 router
   .route('/products')

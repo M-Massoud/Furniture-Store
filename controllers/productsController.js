@@ -23,7 +23,7 @@ module.exports.getAllProducts = async (request, response, next) => {
   }
 };
 
-module.exports.addNewProduct = (request, response, error) => {
+module.exports.addNewProduct = (request, response,next) => {
   // console.log(request.file);
   let newProduct = new Products({
     name: request.body.name,
@@ -88,16 +88,16 @@ module.exports.deleteProduct = (request, response, next) => {
 
       // `./uploads/products-imgs/${data.image}`
 
-      productImgPath = path.join(
-        __dirname,
-        '..',
-        'uploads',
-        'products-imgs',
-        data.image
-      );
-      console.log(productImgPath);
+      // productImgPath = path.join(
+      //   __dirname,
+      //   '..',
+      //   'uploads',
+      //   'products-imgs',
+      //   data.image
+      // );
+      // console.log(productImgPath);
 
-      fs.unlinkSync(productImgPath);
+      // fs.unlinkSync(productImgPath);
       if (data == null) next(new Error(' needed product cannot be deleted'));
       response
         .status(200)
