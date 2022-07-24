@@ -14,6 +14,7 @@ const adminRoute = require('./routes/adminRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const subCategoryRoute = require('./routes/subCategoryRoute');
 const multer = require('multer');
+const searchRout = require("./routes/searchRoute");
 
 const server = express();
 const port = 8080;
@@ -53,6 +54,7 @@ server.use(adminRoute);
 server.use(categoryRoute);
 server.use(subCategoryRoute);
 server.use(changePasswordRoute);
+server.use(searchRout);
 
 // c- General middleware for not Found url pathes with 404 status code.
 server.use((request, response) => {
