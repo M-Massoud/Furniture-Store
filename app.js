@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
+
+// import routes
 const loginRoute = require('./Routes/loginRoute');
 const forgotPasswordRoute = require('./routes/forgotPasswordRoute');
 const changePasswordRoute = require('./routes/changePasswordRoute');
@@ -14,14 +16,14 @@ const adminRoute = require('./routes/adminRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const subCategoryRoute = require('./routes/subCategoryRoute');
 const multer = require('multer');
-const searchRout = require("./routes/searchRoute");
+const searchRoute = require("./routes/searchRoute");
 
+// start the server and connect the DB
 const server = express();
 const port = 8080;
 // const port = 8081;
 
 // connect to database and express server
-
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
@@ -54,7 +56,7 @@ server.use(adminRoute);
 server.use(categoryRoute);
 server.use(subCategoryRoute);
 server.use(changePasswordRoute);
-server.use(searchRout);
+server.use(searchRoute);
 
 // c- General middleware for not Found url pathes with 404 status code.
 server.use((request, response) => {

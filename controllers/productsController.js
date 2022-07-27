@@ -7,23 +7,31 @@ const path = require('path');
 
 module.exports.getAllProducts = async (request, response, next) => {
   try {
-    const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
+    const maxItemsNumberInPage =
+      Number(request.query.itemCount) <= 20
+        ? Number(request.query.itemCount)
+        : 10;
 
     const numberOfProducts = await Products.count();
     const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
-    const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
+    const requestedPageNumber =
+      Number(request.query.page) <= maxPagesNumber
+        ? Number(request.query.page) || 1
+        : maxPagesNumber;
 
-    const products = await Products.find().skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+    const products = await Products.find()
+      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+      .limit(maxItemsNumberInPage);
 
-    response
-      .status(200)
-      .json({ resData: { maxPagesNumber: maxPagesNumber, products: products } });
+    response.status(200).json({
+      resData: { maxPagesNumber: maxPagesNumber, products: products },
+    });
   } catch (error) {
     next(error);
   }
 };
 
-module.exports.addNewProduct = (request, response,next) => {
+module.exports.addNewProduct = (request, response, next) => {
   // console.log(request.file);
   let newProduct = new Products({
     name: request.body.name,
@@ -33,7 +41,8 @@ module.exports.addNewProduct = (request, response,next) => {
     discount: request.body.discount,
     'subCategory.id': request.body.subCategory.id,
     'subCategory.title': request.body.subCategory.title,
-    image: request.file?.filename || 'default-product-img.jpg',
+    image:
+      request.file?.filename || request.body.image || 'default-product-img.jpg',
   });
   newProduct
     .save()
@@ -60,7 +69,7 @@ module.exports.updateProduct = async (request, response, next) => {
       }
 
       //to update image
-      data.image = request.file?.filename || data.image;
+      data.image = request.file?.filename || request.body.image || data.image;
 
       await data.save();
       response.status(200).json({ data: 'product updated successfully' });
@@ -88,16 +97,16 @@ module.exports.deleteProduct = (request, response, next) => {
 
       // `./uploads/products-imgs/${data.image}`
 
-      // productImgPath = path.join(
-      //   __dirname,
-      //   '..',
-      //   'uploads',
-      //   'products-imgs',
-      //   data.image
-      // );
-      // console.log(productImgPath);
+      productImgPath = path.join(
+        __dirname,
+        '..',
+        'uploads',
+        'products-imgs',
+        data.image
+      );
+      console.log(productImgPath);
 
-      // fs.unlinkSync(productImgPath);
+      fs.unlinkSync(productImgPath);
       if (data == null) next(new Error(' needed product cannot be deleted'));
       response
         .status(200)
