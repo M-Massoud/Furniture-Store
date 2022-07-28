@@ -58,22 +58,33 @@ module.exports.addNewProduct = (request, response, next) => {
 module.exports.updateProduct = async (request, response, next) => {
   try {
     let data = await Products.findOne({ _id: request.body.id });
-    for (let key in request.body) {
-      // check if key is object type
-      if (request.body[key].constructor.name == 'Object') {
+    for (const key in request.body) {
+      if (typeof request.body[key] == 'object') {
         for (let item in request.body[key]) {
           data[key][item] = request.body[key][item];
         }
-      } else {
-        data[key] = request.body[key];
-      }
-
-      //to update image
-      data.image = request.file?.filename || request.body.image || data.image;
-
-      await data.save();
-      response.status(200).json({ data: 'product updated successfully' });
+      } else data[key] = request.body[key];
     }
+
+    let oldImage = data.image;
+    //to update image
+    data.image = request.file?.filename || request.body.image || data.image;
+
+    if (oldImage != data.image) {
+      // delete the old image
+      productImgPath = path.join(
+        __dirname,
+        '..',
+        'uploads',
+        'products-imgs',
+        oldImage
+      );
+      console.log(productImgPath);
+      fs.unlinkSync(productImgPath);
+    }
+    await data.save();
+
+    response.status(200).json({ data: 'product updated successfully' });
   } catch (error) {
     next(error);
   }
@@ -116,3 +127,8 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
+
+/*
+1659037907336-img10
+1659037907336-img10
+*/
