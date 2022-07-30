@@ -8,8 +8,10 @@ const orderSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now },
     totalPrice: Number,
     quantity: Number,
-    Status:{ type: String, enum: ['fullfilled', 'pending', 'cancelled'] }
+    status:{ type: String, enum: ['fullfilled', 'pending', 'cancelled'],
+    default:'pending' }
 });//orders Schema
+
 orderSchema.plugin(AutoIncrement, {id: 'orders_id_counter',inc_field: '_id' });
 
 module.exports=mongoose.model("orders",orderSchema);

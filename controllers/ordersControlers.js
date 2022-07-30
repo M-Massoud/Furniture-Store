@@ -41,12 +41,11 @@ module.exports.getOrderbyID = function (request, response,next) {
 }
 module.exports.addOrders = function (request, response,next) {
     let object = new Orders({
-        _id:request.body._id,
         userId: request.body.userId,
         product: request.body.product,
         totalPrice: request.body.totalPrice,
         quantity: request.body.quantity,
-        Status:request.body.Status
+        status:request.body.status
     });
     object.save()
         .then(data => {

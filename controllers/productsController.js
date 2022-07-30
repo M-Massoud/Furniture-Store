@@ -127,8 +127,3 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
-
-/*
-1659037907336-img10
-1659037907336-img10
-*/
