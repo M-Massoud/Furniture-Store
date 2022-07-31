@@ -3,7 +3,7 @@ require('../models/categoryModel');
 let Category = mongoose.model('categories');
 
 
-module.exports.getAllCategories = async (request, response) => {
+module.exports.getAllCategories = async (request, response,next) => {
   try {
     const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
 
