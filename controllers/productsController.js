@@ -127,3 +127,107 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
+// highprice
+module.exports.sortHighPriceProducts = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage =
+      Number(request.query.itemCount) <= 20
+        ? Number(request.query.itemCount)
+        : 10;
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const requestedPageNumber =
+      Number(request.query.page) <= maxPagesNumber
+        ? Number(request.query.page) || 1
+        : maxPagesNumber;
+
+    const products = await Products.find().sort({price:-1})
+      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+      .limit(maxItemsNumberInPage);
+
+    response.status(200).json({
+      resData: { maxPagesNumber: maxPagesNumber, products: products },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//lowprice
+module.exports.sortLowPriceProducts = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage =
+      Number(request.query.itemCount) <= 20
+        ? Number(request.query.itemCount)
+        : 10;
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const requestedPageNumber =
+      Number(request.query.page) <= maxPagesNumber
+        ? Number(request.query.page) || 1
+        : maxPagesNumber;
+
+    const products = await Products.find().sort({price:1})
+      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+      .limit(maxItemsNumberInPage);
+
+    response.status(200).json({
+      resData: { maxPagesNumber: maxPagesNumber, products: products },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//A to Z Sort
+module.exports.sortProductsNameFromAtoZ = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage =
+      Number(request.query.itemCount) <= 20
+        ? Number(request.query.itemCount)
+        : 10;
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const requestedPageNumber =
+      Number(request.query.page) <= maxPagesNumber
+        ? Number(request.query.page) || 1
+        : maxPagesNumber;
+
+    const products = await Products.find().sort({name:1})
+      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+      .limit(maxItemsNumberInPage);
+
+    response.status(200).json({
+      resData: { maxPagesNumber: maxPagesNumber, products: products },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//Z to A Sort
+module.exports.sortProductsNameFromZtoA = async (request, response, next) => {
+  try {
+    const maxItemsNumberInPage =
+      Number(request.query.itemCount) <= 20
+        ? Number(request.query.itemCount)
+        : 10;
+
+    const numberOfProducts = await Products.count();
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const requestedPageNumber =
+      Number(request.query.page) <= maxPagesNumber
+        ? Number(request.query.page) || 1
+        : maxPagesNumber;
+
+    const products = await Products.find().sort({name:-1})
+      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+      .limit(maxItemsNumberInPage);
+
+    response.status(200).json({
+      resData: { maxPagesNumber: maxPagesNumber, products: products },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
