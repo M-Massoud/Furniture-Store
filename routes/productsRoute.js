@@ -99,5 +99,10 @@ router
     validationMW,
     controller.updateProduct
   );
-
+  //sort price
+  router.route("/lowprice").get(controller.sortLowPriceProducts);
+  router.route("/highprice").get(controller.sortHighPriceProducts);
+  //sort Products Name
+  router.route("/atoz").get(controller.sortProductsNameFromAtoZ);
+  router.route("/ztoa").get(controller.sortProductsNameFromZtoA);
 module.exports = router;
