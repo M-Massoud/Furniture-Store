@@ -15,12 +15,13 @@ const ordersRoute = require('./routes/ordersRoute');
 const adminRoute = require('./routes/adminRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const subCategoryRoute = require('./routes/subCategoryRoute');
+const checkoutSessionRoute = require('./routes/checkoutSessionRoute');
 const multer = require('multer');
 const searchRoute = require("./routes/searchRoute");
 
 // start the server and connect the DB
 const server = express();
-const port = 8081;
+const port = 8080;
 // const port = 8081;
 
 // connect to database and express server
@@ -55,6 +56,7 @@ server.use(ordersRoute);
 server.use(adminRoute);
 server.use(categoryRoute);
 server.use(subCategoryRoute);
+server.use(checkoutSessionRoute);
 server.use(changePasswordRoute);
 server.use(searchRoute);
 

@@ -68,7 +68,7 @@ const schema = new mongoose.Schema({
         required:true
     },
     mobile:{
-        type:Number,
+        type:String,
         required:true,
         unique:true,
     },
