@@ -20,7 +20,7 @@ const searchRoute = require("./routes/searchRoute");
 
 // start the server and connect the DB
 const server = express();
-const port = 8080;
+const port = 8081;
 // const port = 8081;
 
 // connect to database and express server
