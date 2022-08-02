@@ -127,6 +127,10 @@ module.exports.deleteProduct = (request, response, next) => {
       next(error);
     });
 };
+
+////////////////////////////////////////////////
+// sorting //
+
 // highprice
 module.exports.sortHighPriceProducts = async (request, response, next) => {
   try {
@@ -153,6 +157,7 @@ module.exports.sortHighPriceProducts = async (request, response, next) => {
     next(error);
   }
 };
+
 //lowprice
 module.exports.sortLowPriceProducts = async (request, response, next) => {
   try {
@@ -179,6 +184,7 @@ module.exports.sortLowPriceProducts = async (request, response, next) => {
     next(error);
   }
 };
+
 //A to Z Sort
 module.exports.sortProductsNameFromAtoZ = async (request, response, next) => {
   try {
@@ -205,6 +211,7 @@ module.exports.sortProductsNameFromAtoZ = async (request, response, next) => {
     next(error);
   }
 };
+
 //Z to A Sort
 module.exports.sortProductsNameFromZtoA = async (request, response, next) => {
   try {

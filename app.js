@@ -43,7 +43,7 @@ server.use(cors());
 
 // routes
 server.use(express.json());
-server.use(express.urlencoded({ extended: false }));
+server.use(express.urlencoded({ extended: true }));
 server.get('/home', (request, response) => {
   response.send('this is the home page');
 });
@@ -59,6 +59,10 @@ server.use(subCategoryRoute);
 server.use(checkoutSessionRoute);
 server.use(changePasswordRoute);
 server.use(searchRoute);
+
+
+// to access product imgs
+server.use(express.static(__dirname));
 
 // c- General middleware for not Found url pathes with 404 status code.
 server.use((request, response) => {
