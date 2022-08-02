@@ -35,9 +35,6 @@ paymentSchema.plugin(AutoIncrement, {id: 'payment-id'});
 
 const ordersSchema = new mongoose.Schema({
     _id:false,
-    orderId:{
-        type:Number
-    },
     productId:{
         type:Number,       
     },

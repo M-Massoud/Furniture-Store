@@ -34,8 +34,8 @@ module.exports.createCheckoutSession = async (request, response, next) => {
             customer_email: user.email,
             line_items: checkoutProducts,
             client_reference_id: request.params.productId,
-            success_url: `${YOUR_DOMAIN}?success=true`,
-            cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+            success_url: `${YOUR_DOMAIN}/checkout/success`,
+            cancel_url: `${YOUR_DOMAIN}/shoppingCart`,
         });
         response.status(200).json({ status: 'Success', url: session.url, session });
     }

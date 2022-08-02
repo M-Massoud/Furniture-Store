@@ -7,20 +7,30 @@ const path = require('path');
 
 module.exports.getAllProducts = async (request, response, next) => {
   try {
+    let filterRange = '';
+    let filterObject = {};
+
+    if (request.query.filterBy && request.query.filterRange) {
+      // to test it in postman change the next line to this 'filterRange = JSON.stringify(request.query.filterRange);'
+      filterRange = request.query.filterRange;
+      filterRange = filterRange.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+      filterObject[request.query.filterBy] = JSON.parse(filterRange);
+    }
+
     const maxItemsNumberInPage =
       Number(request.query.itemCount) <= 20
         ? Number(request.query.itemCount)
         : 10;
 
-    const numberOfProducts = await Products.count();
+    const numberOfProducts = await Products.find(filterObject).count();
     const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
     const requestedPageNumber =
       Number(request.query.page) <= maxPagesNumber
         ? Number(request.query.page) || 1
         : maxPagesNumber;
 
-    const products = await Products.find()
-      .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
+    const products = await Products.find(filterObject)
+      .skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage)
       .limit(maxItemsNumberInPage);
 
     response.status(200).json({
@@ -146,7 +156,7 @@ module.exports.sortHighPriceProducts = async (request, response, next) => {
         ? Number(request.query.page) || 1
         : maxPagesNumber;
 
-    const products = await Products.find().sort({price:-1})
+    const products = await Products.find().sort({ price: -1 })
       .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
       .limit(maxItemsNumberInPage);
 
@@ -173,7 +183,7 @@ module.exports.sortLowPriceProducts = async (request, response, next) => {
         ? Number(request.query.page) || 1
         : maxPagesNumber;
 
-    const products = await Products.find().sort({price:1})
+    const products = await Products.find().sort({ price: 1 })
       .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
       .limit(maxItemsNumberInPage);
 
@@ -200,7 +210,7 @@ module.exports.sortProductsNameFromAtoZ = async (request, response, next) => {
         ? Number(request.query.page) || 1
         : maxPagesNumber;
 
-    const products = await Products.find().sort({name:1})
+    const products = await Products.find().sort({ name: 1 })
       .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
       .limit(maxItemsNumberInPage);
 
@@ -227,7 +237,7 @@ module.exports.sortProductsNameFromZtoA = async (request, response, next) => {
         ? Number(request.query.page) || 1
         : maxPagesNumber;
 
-    const products = await Products.find().sort({name:-1})
+    const products = await Products.find().sort({ name: -1 })
       .skip((requestedPageNumber - 1) * maxItemsNumberInPage)
       .limit(maxItemsNumberInPage);
 

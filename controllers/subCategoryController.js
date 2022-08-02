@@ -12,7 +12,7 @@ module.exports.getAllsubCategories = async (request, response) => {
     const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage);
     const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
 
-    const subCategories = await subCategory.find().populate({ path: 'products', select: 'name price' }).skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+    const subCategories = await subCategory.find().populate({ path: 'products', select: 'name price' }).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
 
     response
       .status(200)
