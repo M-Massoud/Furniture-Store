@@ -11,7 +11,7 @@ module.exports.getAllCategories = async (request, response,next) => {
     const maxPagesNumber = Math.ceil(numberOfCategories / maxItemsNumberInPage);
     const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
 
-    const categories = await Category.find().populate({ path: 'subCategory', select: 'title' }).skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+    const categories = await Category.find().populate({ path: 'subCategory', select: 'title' }).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
 
     response
       .status(200)

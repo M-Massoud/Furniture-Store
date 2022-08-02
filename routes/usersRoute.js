@@ -51,7 +51,6 @@ router.route("/users")
         check('payment.cardNumber').optional().isNumeric().withMessage("card number should be number").isLength({ min: 16, max: 16 }).withMessage("card number length should be 16 numbers"),
 
         body("orders").optional().isArray({ type: Object }).withMessage("orders should be array of objects"),
-        check('orders.*.id').optional().isNumeric().withMessage("order id should be number"),
         check('orders.*.productId').optional().isNumeric().withMessage("orders productId should be number"),
         check('orders.*.productName').optional().isString().withMessage("orders productName should be string"),
     ],
@@ -87,7 +86,6 @@ router.route("/user/:id")
         check('payment.cardNumber').optional().isNumeric().withMessage("card number should be number").isLength({ min: 12, max: 12 }).withMessage("card number length should be 12 numbers"),
 
         body("orders").optional().isArray({ type: Object }).withMessage("orders should be array of objects"),
-        check('orders.*.id').optional().isNumeric().withMessage("order id should be number"),
         check('orders.*.productId').optional().isNumeric().withMessage("orders productId should be number"),
         check('orders.*.productName').optional().isString().withMessage("orders productName should be string"),
     ],

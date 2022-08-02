@@ -12,7 +12,7 @@ module.exports.getAllUsers = async (request, response, next) => {
     const maxPagesNumber = Math.ceil(numberOfUsers / maxItemsNumberInPage);
     const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
 
-    const users = await User.find().skip((requestedPageNumber - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+    const users = await User.find().skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
 
     response
       .status(200)
