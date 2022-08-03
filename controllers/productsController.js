@@ -80,7 +80,7 @@ module.exports.updateProduct = async (request, response, next) => {
     //to update image
     data.image = request.file?.filename || request.body.image || data.image;
 
-    if (oldImage != data.image) {
+    if (oldImage != data.image && oldImage !== "default-product-img.jpg" ) {
       // delete the old image
       productImgPath = path.join(
         __dirname,
@@ -89,7 +89,7 @@ module.exports.updateProduct = async (request, response, next) => {
         'products-imgs',
         oldImage
       );
-      console.log(productImgPath);
+      // console.log(productImgPath);
       fs.unlinkSync(productImgPath);
     }
     await data.save();
@@ -118,6 +118,8 @@ module.exports.deleteProduct = (request, response, next) => {
 
       // `./uploads/products-imgs/${data.image}`
 
+      // delete the image
+      if(data.image !== "default-product-img.jpg"){
       productImgPath = path.join(
         __dirname,
         '..',
@@ -125,9 +127,11 @@ module.exports.deleteProduct = (request, response, next) => {
         'products-imgs',
         data.image
       );
-      console.log(productImgPath);
+      // console.log(productImgPath);
 
-      fs.unlinkSync(productImgPath);
+      fs.unlinkSync(productImgPath); 
+      }
+
       if (data == null) next(new Error(' needed product cannot be deleted'));
       response
         .status(200)
