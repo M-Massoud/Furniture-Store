@@ -13,7 +13,7 @@ module.exports.getAllorders = async function (request, response,next) {
         const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
     
         const orders = await Orders.find().populate({ path: "userId", select: "firstName lastName email mobile address" })
-        .populate({ path: "product", select:"name price"}).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
+        .populate({ path: "products.product", select:"name price"}).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
     
         response
           .status(200)
@@ -42,9 +42,8 @@ module.exports.getOrderbyID = function (request, response,next) {
 module.exports.addOrders = function (request, response,next) {
     let object = new Orders({
         userId: request.body.userId,
-        product: request.body.product,
+        products: request.body.products,
         totalPrice: request.body.totalPrice,
-        quantity: request.body.quantity,
         status:request.body.status
     });
     object.save()

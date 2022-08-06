@@ -252,3 +252,12 @@ module.exports.sortProductsNameFromZtoA = async (request, response, next) => {
     next(error);
   }
 };
+
+module.exports.updateProductStockAmount = async (request, response, next) => {
+  try {
+    let data = await Products.updateOne({ _id: request.body.id },{$set:{stockAmount:request.body.stockAmount}});
+    response.status(200).json({ data: 'product stock amount updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
