@@ -3,12 +3,12 @@ require('../models/categoryModel');
 let Category = mongoose.model('categories');
 
 
-module.exports.getAllCategories = async (request, response,next) => {
+module.exports.getAllCategories = async (request, response, next) => {
   try {
-    const maxItemsNumberInPage = Number(request.query.itemCount) <= 20 ? Number(request.query.itemCount) : 10;
+    const maxItemsNumberInPage = Number(request.query.itemCount);
 
     const numberOfCategories = await Category.count();
-    const maxPagesNumber = Math.ceil(numberOfCategories / maxItemsNumberInPage);
+    const maxPagesNumber = Math.ceil(numberOfCategories / maxItemsNumberInPage || 1);
     const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
 
     const categories = await Category.find().populate({ path: 'subCategory', select: 'title' }).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);

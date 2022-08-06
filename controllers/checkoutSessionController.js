@@ -10,30 +10,31 @@ const YOUR_DOMAIN = 'http://localhost:3000';
 
 module.exports.createCheckoutSession = async (request, response, next) => {
 
-    let checkoutProducts = [];
-
-    for (let cartData of request.body.shoppingCart) {
-
-        const productData = await Products.findOne({ _id: cartData.productId });
-        checkoutProducts.push(
-            {
-                name: `${productData.name}`,
-                description: productData.description,
-                amount: (productData.price - productData.discount).toFixed(2) * 100,
-                quantity: cartData.quantity,
-                currency: 'egp',
-            },
-        );
-    }
-
-    const user = await User.findOne({ _id: request.id });
-
     try {
+
+        let checkoutProducts = [];
+
+        for (let cartData of request.body.shoppingCart) {
+
+            const productData = await Products.findOne({ _id: cartData.productId });
+            checkoutProducts.push(
+                {
+                    name: `${productData.name}`,
+                    description: productData.description,
+                    amount: ((productData.price - productData.discount) * cartData.quantity).toFixed(2) * 100,
+                    quantity: cartData.quantity,
+                    currency: 'egp',
+                },
+            );
+        }
+
+        const user = await User.findOne({ _id: request.id });
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             customer_email: user.email,
             line_items: checkoutProducts,
-            client_reference_id: request.params.productId,
+            client_reference_id: request.body.shoppingCart[0].productId,
             success_url: `${YOUR_DOMAIN}/checkout/success`,
             cancel_url: `${YOUR_DOMAIN}/shoppingCart`,
         });

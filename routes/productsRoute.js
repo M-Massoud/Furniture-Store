@@ -5,6 +5,7 @@ const controller = require('./../controllers/productsController');
 const validationMW = require('../middlewares/validationMW');
 const authMW = require('./../middlewares/authMW');
 const adminAuthorizationMW = require('../middlewares/adminAuthorizationMW');
+const userAuthorizationMW = require('../middlewares/userAuthorizationMW');
 
 const { unlink } = require('node:fs/promises');
 
@@ -38,6 +39,22 @@ router
   .get(controller.getSpecificProduct)
   .delete( authMW, adminAuthorizationMW,controller.deleteProduct);
 
+router
+.route('/products/editStockAmount')
+.put(
+  authMW,
+  userAuthorizationMW,
+  [
+    body('stockAmount')
+      .optional()
+      .isNumeric()
+      .withMessage('product stock amount should be number'),
+  ],
+  validationMW,
+  controller.updateProductStockAmount
+);
+
+  
 router
   .route('/products')
 

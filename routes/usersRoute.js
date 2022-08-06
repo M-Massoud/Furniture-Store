@@ -83,7 +83,7 @@ router.route("/user/:id")
 
         body("payment").optional().isObject({}).withMessage("payment should be object"),
         check('payment.cardType').optional().isIn(['visa', 'mastercard', 'meza']).withMessage("card type should be one of these ['visa','mastercard','meza']"),
-        check('payment.cardNumber').optional().isNumeric().withMessage("card number should be number").isLength({ min: 12, max: 12 }).withMessage("card number length should be 12 numbers"),
+        check('payment.cardNumber').optional().isNumeric().withMessage("card number should be number").isLength({ min: 16, max: 16 }).withMessage("card number length should be 16 numbers"),
 
         body("orders").optional().isArray({ type: Object }).withMessage("orders should be array of objects"),
         check('orders.*.productId').optional().isNumeric().withMessage("orders productId should be number"),
