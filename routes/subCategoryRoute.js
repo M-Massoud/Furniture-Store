@@ -69,4 +69,21 @@ router
     controller.deleteProductFromSubcategoryById
   );
 
+  router
+  .route('/subCategory/updateProducts')
+  .put(
+    authMW,
+    adminAuthorizationMW,
+    [
+      body('id')
+        .isNumeric()
+        .withMessage('sub category id shoud be number'),
+      body('products')
+        .isArray({ type: Number })
+        .withMessage('products should be array of numbers'),
+    ],
+    validationMW,
+    controller.updatesubCategoryProducts
+  );
+
 module.exports = router;
