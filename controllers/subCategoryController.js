@@ -9,7 +9,7 @@ module.exports.getAllsubCategories = async (request, response) => {
     const maxItemsNumberInPage = Number(request.query.itemCount);
 
     const numberOfSubCategories = await subCategory.count();
-    const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage||1);
+    const maxPagesNumber = Math.ceil(numberOfSubCategories / maxItemsNumberInPage || 1);
     const requestedPageNumber = Number(request.query.page) <= maxPagesNumber ? Number(request.query.page) || 1 : maxPagesNumber;
 
     const subCategories = await subCategory.find().populate({ path: 'products', select: 'name price' }).skip(((requestedPageNumber >= 1 ? requestedPageNumber : 1) - 1) * maxItemsNumberInPage).limit(maxItemsNumberInPage);
@@ -81,7 +81,7 @@ module.exports.deleteProductFromSubcategoryById = (request, response, next) => {
     { $pull: { products: { $in: request.body.products } } }
   )
     .then(data => {
-      if (data == null || data.modifiedCount === 0 ) {
+      if (data == null || data.modifiedCount === 0) {
         next(new Error('nedded product cannot be found'));
       } else {
         // console.log(data);
@@ -107,4 +107,13 @@ module.exports.deletesubCategory = (request, response, next) => {
     .catch(error => {
       next(error);
     });
+};
+
+module.exports.updatesubCategoryProducts = async (request, response, next) => {
+  try {
+    await subCategory.updateOne({ _id: request.body.id }, { $push: { products: request.body.products } });
+    response.status(200).json({ data: 'subCategory products updated successfully' });
+  } catch (error) {
+    next(error);
+  }
 };

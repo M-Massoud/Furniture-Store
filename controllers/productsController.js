@@ -18,13 +18,10 @@ module.exports.getAllProducts = async (request, response, next) => {
     }
 
     // pagination
-    const maxItemsNumberInPage =
-      Number(request.query.itemCount) <= 20
-        ? Number(request.query.itemCount)
-        : 10;
+    const maxItemsNumberInPage = Number(request.query.itemCount);
 
     const numberOfProducts = await Products.find(filterObject).count();
-    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage);
+    const maxPagesNumber = Math.ceil(numberOfProducts / maxItemsNumberInPage || 1);
     const requestedPageNumber =
       Number(request.query.page) <= maxPagesNumber
         ? Number(request.query.page) || 1
