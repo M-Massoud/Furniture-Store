@@ -56,4 +56,17 @@ router
     controller.deletesubCategory
   );
 
+// to delete product from subcategory
+router
+  .route('/deleteProuductFromSubcategory/:id')
+  .delete(
+    authMW,
+    adminAuthorizationMW,
+    param('id')
+      .isNumeric()
+      .withMessage('subcategory id is required and should be number'),
+    validationMW,
+    controller.deleteProductFromSubcategoryById
+  );
+
 module.exports = router;

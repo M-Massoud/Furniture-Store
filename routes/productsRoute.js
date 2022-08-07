@@ -78,6 +78,10 @@ router
       body('price')
         .isNumeric()
         .withMessage('product price is required and should be a number'),
+      body('discount')
+        .optional()
+        .isNumeric()
+        .withMessage('product discount should be a number'),
       body('subCategory')
         .isObject()
         .withMessage('product sub categordy is required '),
@@ -107,6 +111,10 @@ router
         .optional()
         .isNumeric()
         .withMessage('product price is required and should be a number'),
+      body('discount')
+        .optional()
+        .isNumeric()
+        .withMessage('product discount should be a number'),
       body('subCategory')
         .optional()
         .isObject()

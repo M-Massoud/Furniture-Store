@@ -17,6 +17,7 @@ module.exports.getAllProducts = async (request, response, next) => {
       filterObject[request.query.filterBy] = JSON.parse(filterRange);
     }
 
+    // pagination
     const maxItemsNumberInPage =
       Number(request.query.itemCount) <= 20
         ? Number(request.query.itemCount)

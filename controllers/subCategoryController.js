@@ -74,6 +74,25 @@ module.exports.updatesubCategory = async (request, response, next) => {
   }
 };
 
+
+module.exports.deleteProductFromSubcategoryById = (request, response, next) => {
+  subCategory.updateOne(
+    { _id: request.params.id },
+    { $pull: { products: { $in: request.body.products } } }
+  )
+    .then(data => {
+      if (data == null || data.modifiedCount === 0 ) {
+        next(new Error('nedded product cannot be found'));
+      } else {
+        // console.log(data);
+        response.status(200).json({ data: 'product removed successfully from subcategory' });
+      }
+    })
+    .catch(error => {
+      next(error);
+    });
+};
+
 module.exports.deletesubCategory = (request, response, next) => {
   subCategory
     .deleteOne({ _id: request.params.id }, {})
