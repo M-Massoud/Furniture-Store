@@ -8,7 +8,7 @@ const adminAuthorizationMW = require('../middlewares/adminAuthorizationMW');
 
 router
   .route('/subCategory')
-  .get(controller.getAllsubCategories)
+  .get(controller.getAllSubCategories)
   .post(
     authMW,
     adminAuthorizationMW,
@@ -23,7 +23,7 @@ router
     ],
 
     validationMW,
-    controller.createsubCategory
+    controller.createSubCategory
   )
   .put(
     authMW,
@@ -40,12 +40,12 @@ router
     ],
 
     validationMW,
-    controller.updatesubCategory
+    controller.updateSubCategory
   );
 
 router
   .route('/subCategory/:id')
-  .get(controller.getsubCategoryById)
+  .get(controller.getSubCategoryById)
   .delete(
     authMW,
     adminAuthorizationMW,
@@ -53,7 +53,7 @@ router
       .isNumeric()
       .withMessage('not a valid sub category id , should be a number'),
     validationMW,
-    controller.deletesubCategory
+    controller.deleteSubCategory
   );
 
 // to delete product from subcategory
@@ -69,7 +69,7 @@ router
     controller.deleteProductFromSubcategoryById
   );
 
-  router
+router
   .route('/subCategory/updateProducts')
   .put(
     authMW,
@@ -83,7 +83,21 @@ router
         .withMessage('products should be array of numbers'),
     ],
     validationMW,
-    controller.updatesubCategoryProducts
+    controller.updateSubCategoryProducts
+  );
+
+router
+  .route('/editSubCategory')
+  .put(
+    authMW,
+    adminAuthorizationMW,
+    [
+      body('id').isNumeric().withMessage('Category id shoud be number'),
+      body('title').optional().isString().withMessage('sub category title shoud be characters'),
+      body('products').optional().isArray({ type: Number }).withMessage('products should be array of numbers'),
+    ],
+    validationMW,
+    controller.editSubCategory
   );
 
 module.exports = router;

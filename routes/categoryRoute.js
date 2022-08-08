@@ -67,4 +67,18 @@ router
     controller.deleteCategorySubCategoryById
   );
 
+router
+  .route('/editCategory')
+  .put(
+    authMW,
+    adminAuthorizationMW,
+    [
+      body('id').isNumeric().withMessage('Category id shoud be number'),
+      body('title').optional().isString().withMessage('Category title shoud be characters'),
+      body('subCategory').optional().isArray({ type: Number }).withMessage('sub Category should be number'),
+    ],
+    validationMW,
+    controller.editCategory
+  );
+
 module.exports = router;

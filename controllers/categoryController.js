@@ -132,3 +132,19 @@ module.exports.deleteCategorySubCategoryById = (request, response, next) => {
 //     next(error);
 //   }
 // };
+
+module.exports.editCategory = async (request, response, next) => {
+  try {
+    const data = await Category.findOne({ _id: request.body.id });
+
+    for (let key in request.body) {
+      data[key] = request.body[key];
+    }
+
+    await data.save();
+
+    response.status(200).json({ data: 'Category Edited Successfully' });
+  } catch (error) {
+    next(error);
+  }
+};

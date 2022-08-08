@@ -4,7 +4,7 @@ const { body } = require('express-validator');
 
 let subCategory = mongoose.model('subCategory');
 
-module.exports.getAllsubCategories = async (request, response) => {
+module.exports.getAllSubCategories = async (request, response) => {
   try {
     const maxItemsNumberInPage = Number(request.query.itemCount);
 
@@ -23,7 +23,7 @@ module.exports.getAllsubCategories = async (request, response) => {
 
 };
 
-module.exports.getsubCategoryById = (request, response, next) => {
+module.exports.getSubCategoryById = (request, response, next) => {
   subCategory
     .findOne({ _id: request.params.id })
     .populate({ path: 'products', select: 'name description price discount' })
@@ -36,7 +36,7 @@ module.exports.getsubCategoryById = (request, response, next) => {
     });
 };
 
-module.exports.createsubCategory = (request, response, next) => {
+module.exports.createSubCategory = (request, response, next) => {
   let object = new subCategory({
     title: request.body.title,
     products: request.body.products,
@@ -52,7 +52,7 @@ module.exports.createsubCategory = (request, response, next) => {
     });
 };
 
-module.exports.updatesubCategory = async (request, response, next) => {
+module.exports.updateSubCategory = async (request, response, next) => {
   // console.log(request.body.id);
   try {
     const data = await subCategory.findOne({ _id: request.body.id });
@@ -93,7 +93,7 @@ module.exports.deleteProductFromSubcategoryById = (request, response, next) => {
     });
 };
 
-module.exports.deletesubCategory = (request, response, next) => {
+module.exports.deleteSubCategory = (request, response, next) => {
   subCategory
     .deleteOne({ _id: request.params.id }, {})
     .then(data => {
@@ -109,10 +109,27 @@ module.exports.deletesubCategory = (request, response, next) => {
     });
 };
 
-module.exports.updatesubCategoryProducts = async (request, response, next) => {
+module.exports.updateSubCategoryProducts = async (request, response, next) => {
   try {
     await subCategory.updateOne({ _id: request.body.id }, { $push: { products: request.body.products } });
     response.status(200).json({ data: 'subCategory products updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.editSubCategory = async (request, response, next) => {
+
+  try {
+    const data = await subCategory.findOne({ _id: request.body.id });
+
+    for (let key in request.body) {
+      data[key] = request.body[key];
+    }
+
+    await data.save();
+
+    response.status(200).json({ data: 'sub Category Updated Successfully' });
   } catch (error) {
     next(error);
   }
