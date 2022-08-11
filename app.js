@@ -2,8 +2,7 @@ const express = require('express');
 // remove at deployment
 const morgan = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose');
-require('dotenv').config();
+
 
 // import routes
 const loginRoute = require('./Routes/loginRoute');
@@ -21,19 +20,11 @@ const searchRoute = require("./routes/searchRoute");
 
 // start the server and connect the DB
 const server = express();
-const port = 8080;
+// const port = 8080;
 // const port = 8081;
 
 // connect to database and express server
-mongoose
-  .connect(process.env.DB_URL)
-  .then(() => {
-    console.log('DB Connected');
-    server.listen(process.env.port || port, () => {
-      console.log('the server is up and currently listening');
-    });
-  })
-  .catch(error => console.log('Db Connection Error ' + error));
+
 
 //a- Middleware to write request url and method
 server.use(morgan('tiny'));
@@ -75,6 +66,8 @@ server.use((error, request, response, next) => {
   response.status(status).json({ message: 'Internal Error' + error });
 });
 
+
+module.exports = server;
 // DB_URL="mongodb://localhost:27017/furnitureStoreDB"
 // DB_URL="mongodb://0.0.0.0:27017/furnitureStoreDB"
 // port 8080 || 8081
