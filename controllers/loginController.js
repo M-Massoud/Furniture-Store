@@ -6,6 +6,18 @@ let Admin = mongoose.model('admin');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
+const generateToken = (data,secret_Key) => jwt.sign(data, secret_Key, { expiresIn: "7d" });
+const validateToken = (token,secret_Key) => {
+    try {
+        const decoded = jwt.verify(token, secret_Key);
+        return decoded;
+    } catch (err) {
+        return {};
+    }
+};// validated token
+module.exports.generateToken = generateToken;
+module.exports.validateToken = validateToken;
+
 module.exports.loginUser = (request, response, next) => {
 
     User.findOne(
@@ -19,11 +31,11 @@ module.exports.loginUser = (request, response, next) => {
             else {
                 bcrypt.compare(request.body.password, userData.password).then(function (result) {
                     if (result == true) {
-                        let token = jwt.sign({
+                        let token = generateToken({
                             id: userData._id,
                             role: "user"
                         },
-                            process.env.secret_Key, { expiresIn: "7d" })
+                            process.env.secret_Key)
 
                         response.status(200).json({ token, message: "login user" });
                     }
@@ -50,12 +62,11 @@ module.exports.loginAdmin = (request, response, next) => {
             else {
                 bcrypt.compare(request.body.password, adminData.password).then(function (result) {
                     if (result == true) {
-                        let token = jwt.sign({
+                        let token = generateToken({
                             id: adminData._id,
                             role: "admin"
                         },
-                            process.env.secret_Key, { expiresIn: "7d" })
-
+                            process.env.secret_Key) 
                         response.status(200).json({ token, message: "login admin" });
                     }
                     else {
