@@ -63,9 +63,16 @@ module.exports.updateUser = async (request, response, next) => {
         // check if key is array type
         else if (request.body[key].constructor.name == 'Array') {
           for (let item in request.body[key]) {
-            data[key].push(request.body[key][item]);
+            // check uniqueness in array values
+            if (!data[key].includes(request.body[key][item])) {
+              data[key].push(request.body[key][item]);
+            }
+            else {
+              console.log("item already exist");
+            }
           }
-        } else {
+        }
+        else {
           data[key] = request.body[key];
         }
       }
@@ -77,18 +84,6 @@ module.exports.updateUser = async (request, response, next) => {
     next(error);
   }
 };
-
-// module.exports.deleteUser = (request, response, next) => {
-//   User.deleteOne({ _id: request.body.id })
-//     .then(data => {
-//       if (data == null) {
-//         next(new Error('user not found'));
-//       } else response.status(200).json({ data: 'user deleted successfully' });
-//     })
-//     .catch(error => {
-//       next(error);
-//     });
-// };
 
 module.exports.getUserById = (request, response, next) => {
   User.find({ _id: request.params.id })
@@ -186,31 +181,3 @@ module.exports.deleteUserWhishListByUserId = (request, response, next) => {
       next(error);
     });
 };
-
-
-// if you want to use pagination uncomment this
-
-// module.exports.getAllUsersByPageNumber = async (request, response, next) => {
-//   try {
-//     const requestedPageNumber = request.params.pageNumber;
-//     const maxItemsNumberInPage = 10;
-
-//     const startFromSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
-//     const endToSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage;
-
-//     const numberOfUsers = await User.count();
-//     const maxPagesNumber = Math.ceil(numberOfUsers / maxItemsNumberInPage);
-
-//     const users = await User.find({
-//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
-//     });
-
-//     response
-//       .status(200)
-//       .json({ resData: { maxPagesNumber: maxPagesNumber, users: users } });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
