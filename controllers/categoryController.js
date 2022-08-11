@@ -54,7 +54,13 @@ module.exports.updateCategory = async (request, response, next) => {
       console.log(key);
       if (request.body[key].constructor.name == 'Array') {
         for (let item in request.body[key]) {
-          data[key].push(request.body[key][item]);
+          // check uniqueness in array values
+          if (!data[key].includes(request.body[key][item])) {
+            data[key].push(request.body[key][item]);
+          }
+          else {
+            console.log("item already exist");
+          }
         }
       }
       else
@@ -105,33 +111,6 @@ module.exports.deleteCategorySubCategoryById = (request, response, next) => {
       next(error);
     });
 };
-
-// if you want to use pagination uncomment this
-
-// module.exports.getAllCategoriesByPageNumber = async (request, response, next) => {
-//   try {
-//     const requestedPageNumber = request.params.pageNumber;
-//     const maxItemsNumberInPage = 10;
-
-//     const startFromSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage - maxItemsNumberInPage;
-//     const endToSelectedItemId =
-//       requestedPageNumber * maxItemsNumberInPage;
-
-//     const numberOfCategories = await Category.count();
-//     const maxPagesNumber = Math.ceil(numberOfCategories / maxItemsNumberInPage);
-
-//     const categories = await Category.find({
-//       _id: { $gt: startFromSelectedItemId, $lte: endToSelectedItemId },
-//     }).populate({ path: 'subCategory', select: 'title' });
-
-//     response
-//       .status(200)
-//       .json({ resData: { maxPagesNumber: maxPagesNumber, categories: categories } });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 module.exports.editCategory = async (request, response, next) => {
   try {

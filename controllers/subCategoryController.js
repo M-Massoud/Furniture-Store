@@ -61,7 +61,13 @@ module.exports.updateSubCategory = async (request, response, next) => {
       console.log(key);
       if (request.body[key].constructor.name == 'Array') {
         for (let item in request.body[key]) {
-          data[key].push(request.body[key][item]);
+          // check uniqueness in array values
+          if (!data[key].includes(request.body[key][item])) {
+            data[key].push(request.body[key][item]);
+          }
+          else {
+            console.log("item already exist");
+          }
         }
       } else data[key] = request.body[key];
     }

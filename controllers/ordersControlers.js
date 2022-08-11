@@ -39,6 +39,23 @@ module.exports.getOrderbyID = function (request, response,next) {
         .catch(error => next(error));
    
 }
+
+module.exports.getOrdersByUserID = function (request, response,next) {
+    Orders.find({ userId: request.body.userId }).populate({ path: "products.product", select:"name"})
+        .then(data => {
+           if ((request.role=="admin") ||((request.role == "user") && (request.id == request.body.userId))) {
+                if (data == null) { next(new Error("This Order is not found..!")); } else {
+                    response.status(200).json(data);
+                }
+            }
+             else
+                {
+                 next(new Error("Not authorized!"));
+                }
+        })
+        .catch(error => next(error));
+}
+
 module.exports.addOrders = function (request, response,next) {
     let object = new Orders({
         userId: request.body.userId,

@@ -1,4 +1,5 @@
 const express = require("express");
+const { body, param } = require("express-validator");
 const authMW = require('./../middlewares/authMW');
 const validtor = require("../middlewares/orderExpressvaldMW");
 const validationMW = require("../middlewares/validationMW");
@@ -17,7 +18,12 @@ router.route("/orders/:id")
     .get(authMW, adminOrUserByIdAuthorizationMW, controller.getOrderbyID)
     .delete(authMW, adminAuthoize, controller.deleteOrders)
 
-
+router.route("/ordersByUserID")
+    .post(authMW, userAuthoize, [
+        body("userId").isNumeric().withMessage("user id should be number"),
+    ],
+        validationMW,
+        controller.getOrdersByUserID)
 
 module.exports = router;
 
