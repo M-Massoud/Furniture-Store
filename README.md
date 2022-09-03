@@ -18,3 +18,5 @@ main backend technologies:
 - Bycrypt
 - JWT
 - Express Validator
+
+ you can check the frontend repo here https://github.com/M-Massoud/Furniture-Store-frontend
